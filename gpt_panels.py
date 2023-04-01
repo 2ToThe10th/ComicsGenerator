@@ -27,7 +27,7 @@ def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
 
 def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
     requested_text = f"""
-    Create me a comics about {topic} that consists of {panels} panels.
+    Create me a comics about {topic} .The comics consists of {panels} panels.
     Each panel consists of exactly one replica. The dialogue is between 2 people
     
     The comics must look like this:

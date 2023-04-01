@@ -8,11 +8,12 @@ import numpy as np
 from add_prompt_to_picture import add_prompt_to_picture
 from found_face_position import found_face_position, FacePosition
 from gpt_panels import generate_comics
+from image_concat import concatenate_images
 
 
-def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
+def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str = "cyberpunk") -> np.ndarray:
     print(f"get_next_comics_panel on situation: \"{panel_situation}\" and phrase: \"{phrase}\"")
-    image = get_image_by_situation(panel_situation, style="cyberpunk")
+    image = get_image_by_situation(panel_situation, style=image_style)
     print("Got image from ChatGPT")
     find_face_try = 0
     if phrase is not None:
@@ -35,7 +36,7 @@ def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
 
 
 def get_image_by_situation(situation_description: str, style: str) -> np.ndarray:
-    result = openai.Image.create(prompt=f"Make photo in {style} style: {situation_description}", n=1, size="512x512")
+    result = openai.Image.create(prompt=f"Create an image in the {style} style: {situation_description}", n=1, size="512x512")
     print(result)
     if "error" in result:
         raise ValueError(f"Error happened: {json.dumps(result['error'])}")
@@ -49,12 +50,18 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
 def main():
     # TODO: get panels from chatgpt
     comics = generate_comics("an IT company which supports people with disabilities", 6)
+    comics_images = []
     for index, v in enumerate(comics):
         panel = v["panel"]
         phrase = v["phrase"]
         image = get_next_comics_panel(panel, phrase)
+        comics_images.append(image)
         cv2.imwrite(f"out{index}.png", image)
         print(f"{index} image generated")
+    full_comics = concatenate_images(comics_images, 8, "2:4")
+    cv2.imwrite(f"result.png", full_comics)
+
+
 
 
 if __name__ == '__main__':
