@@ -4,15 +4,24 @@ from typing import List, Dict
 
 
 def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
-    generated_text = generated_text.strip().split('\n')
-    phrases = [x for x in generated_text if x != '']
+    generated_text = generated_text.replace('\n', ' ').strip()
+    generated_text = re.split(r"Panel|Person", generated_text)
+    generated_text = [x for x in generated_text if x != '']
+    if len(generated_text) != 2 * panels:
+        raise ValueError("Number of panels is not sufficient")
+
     result = []
-    for i in range(0, len(phrases), 2):
-        panel = phrases[i]
-        panel = panel.split(':')[1].strip()
-        phrase = phrases[i + 1]
-        phrase = re.findall(r'"(.*?)"', phrase)[0]
+    for i in range(0, len(generated_text), 2):
+        panel = generated_text[i].split(':')[1].strip()
+        if panel[0] == '\'' or panel[0] == '\"':
+            panel = panel[1:-1]
+
+        phrase = generated_text[i].split(':')[1].strip()
+        if phrase[0] == '\'' or phrase[0] == '\"':
+            phrase = phrase[1:-1]
+
         result.append({"panel": panel, "phrase": phrase})
+
     return result
 
 
@@ -33,6 +42,9 @@ def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
             chatgpt_story = response.choices[0].text
             print(chatgpt_story)
             return parse_comics(chatgpt_story, panels)
-        except Exception:
+        except Exception as e:
+
             print(response.choices[0].text)
+            print(e)
+            print('HUINUA HUINUA HUINUA HUINUA HUINUA')
             # print("Not parsed data from chat gpt. Get next")
