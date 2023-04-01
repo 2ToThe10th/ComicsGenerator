@@ -7,6 +7,7 @@ import numpy as np
 
 from add_prompt_to_picture import add_prompt_to_picture
 from found_face_position import found_face_position
+from gpt_panels import generate_comics
 
 
 def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
@@ -38,12 +39,14 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
 
 def main():
     # TODO: get panels from chatgpt
-    image = get_next_comics_panel(
-        "A man with messy hair and glasses is seen walking on the street while staring at his old and outdated phone. He looks frustrated and annoyed.",
-        "Ugh, this phone is driving me crazy. I need a new one",
-    )
-
-    cv2.imwrite("out.png", image)
+    comics = generate_comics("cool story about batman", 8)
+    print(len(comics))
+    # image = get_next_comics_panel(
+    #     "A man with messy hair and glasses is seen walking on the street while staring at his old and outdated phone. He looks frustrated and annoyed.",
+    #     "Ugh, this phone is driving me crazy. I need a new one",
+    # )
+    #
+    # cv2.imwrite("out.png", image)
 
 
 if __name__ == '__main__':
