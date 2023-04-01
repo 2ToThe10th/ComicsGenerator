@@ -9,7 +9,7 @@ def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
     for i in range(0, len(phrases), 2):
         panel = phrases[i]
         replica = phrases[i + 1]
-        result.append({"panel": panel, "replica": replica})
+        result.append({"panel": panel, "phrase": replica})
     return result
 
 
@@ -27,6 +27,8 @@ def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
     while True:
         try:
             response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6, max_tokens=500)
-            return parse_comics(response.choices[0].text, panels)
+            chatgpt_story = response.choices[0].text
+            print(chatgpt_story)
+            return parse_comics(chatgpt_story, panels)
         except Exception:
             print("Not parsed data from chat gpt. Get next")

@@ -6,20 +6,26 @@ import openai
 import numpy as np
 
 from add_prompt_to_picture import add_prompt_to_picture
-from found_face_position import found_face_position
+from found_face_position import found_face_position, FacePosition
 from gpt_panels import generate_comics
 
 
 def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
+    print(f"get_next_comics_panel on situation: \"{panel_situation}\" and phrase: \"{phrase}\"")
     image = get_image_by_situation(panel_situation, style="cyberpunk")
     print("Got image from ChatGPT")
+    find_face_try = 0
     if phrase is not None:
         face_position = found_face_position(image)
         while face_position is None:
+            if find_face_try > 3:
+                face_position = FacePosition(x=30, y=460, width=20, height=20)
+                break
             print("Face not found, try again")
             image = get_image_by_situation(panel_situation, style="cyberpunk")
             print("Got image from ChatGPT")
             face_position = found_face_position(image)
+            find_face_try += 1
 
         cv2.rectangle(
             image, (face_position.x, face_position.y), (face_position.x + face_position.width, face_position.y + face_position.height), (255, 255, 0), 2
@@ -43,13 +49,14 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
 def main():
     # TODO: get panels from chatgpt
     comics = generate_comics("cool story about batman", 8)
+    print(comics)
     print(len(comics))
-    # image = get_next_comics_panel(
-    #     "A man with messy hair and glasses is seen walking on the street while staring at his old and outdated phone. He looks frustrated and annoyed.",
-    #     "Ugh, this phone is driving me crazy. I need a new one",
-    # )
-    #
-    # cv2.imwrite("out.png", image)
+    for index, v in enumerate(comics):
+        panel = v["panel"]
+        phrase = v["phrase"]
+        image = get_next_comics_panel(panel, phrase)
+        cv2.imwrite(f"out{index}.png", image)
+        print(f"{index} image generated")
 
 
 if __name__ == '__main__':
