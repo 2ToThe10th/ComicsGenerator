@@ -18,7 +18,7 @@ def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
     if phrase is not None:
         face_position = found_face_position(image)
         while face_position is None:
-            if find_face_try > 3:
+            if find_face_try > 1:
                 face_position = FacePosition(x=30, y=460, width=20, height=20)
                 break
             print("Face not found, try again")

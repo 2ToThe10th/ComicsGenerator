@@ -36,6 +36,7 @@ def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
     Person 1(or 2): "What the person is saying"
     ...
     """
+    response = None
     while True:
         try:
             response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6, max_tokens=500)
