@@ -7,11 +7,11 @@ import numpy as np
 
 from add_prompt_to_picture import add_prompt_to_picture
 from found_face_position import found_face_position, FacePosition
-from gpt_panels import generate_comics
+from gpt_panels import generate_comics_text
 from image_concat import concatenate_images
 
 
-def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str = "cyberpunk") -> np.ndarray:
+def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str) -> np.ndarray:
     print(f"get_next_comics_panel on situation: \"{panel_situation}\" and phrase: \"{phrase}\"")
     image = get_image_by_situation(panel_situation, style=image_style)
     print("Got image from ChatGPT")
@@ -47,14 +47,14 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
     return cv2.imdecode(image_in_array, -1)  # 'Load it as it is'
 
 
-def main():
-    # TODO: get panels from chatgpt
-    comics = generate_comics("an IT company which supports people with disabilities", 6)
-    comics_images = []
+def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
+    full_images_number = width_images * height_images
+    comics = generate_comics_text(comics_topic, full_images_number)
+    comics_images = [None] * full_images_number
     for index, v in enumerate(comics):
         panel = v["panel"]
         phrase = v["phrase"]
-        image = get_next_comics_panel(panel, phrase)
+        image = get_next_comics_panel(panel, phrase, image_style)
         comics_images.append(image)
         cv2.imwrite(f"out{index}.png", image)
         print(f"{index} image generated")
