@@ -6,7 +6,7 @@ import numpy as np
 
 from found_face_position import FacePosition
 
-FONT = cv2.FONT_HERSHEY_SIMPLEX
+FONT = cv2.FONT_HERSHEY_DUPLEX
 LINE_GAP = 6
 
 
@@ -145,6 +145,7 @@ def find_place_for_phrase(
 
 
 def print_line(image: np.ndarray, line: str, left: int, top: int, width: int, font_scale: float, thickness: int):
+    font_path = "./fonts/animeace2_reg.otf"
     (w, h), _ = cv2.getTextSize(line, fontScale=font_scale, fontFace=FONT, thickness=thickness)
     cv2.putText(image, line, (left + (width - w) // 2, top + h), FONT, font_scale, (0, 0, 0), thickness, cv2.LINE_AA)
 

@@ -48,9 +48,7 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
 
 def main():
     # TODO: get panels from chatgpt
-    comics = generate_comics("man buying new sim card in t-mobile shop", 6)
-    print(comics)
-    print(len(comics))
+    comics = generate_comics("an IT company which supports people with disabilities", 6)
     for index, v in enumerate(comics):
         panel = v["panel"]
         phrase = v["phrase"]
