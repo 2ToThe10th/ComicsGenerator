@@ -1,6 +1,5 @@
 import numpy as np
 from typing import List
-import cv2
 
 IMAGE_HEIGHT = 512
 IMAGE_WIDTH = 512

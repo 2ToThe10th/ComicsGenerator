@@ -27,7 +27,7 @@ def found_face_position(image: np.ndarray) -> FacePosition:
         minSize=(100, 100),
     )
 
-    if faces == []:
+    if faces == ():
         return None
     else:
         x, y, w, h = faces[0]
