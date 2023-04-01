@@ -7,7 +7,7 @@ import numpy as np
 from found_face_position import FacePosition
 
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-LINE_GAP = 3
+LINE_GAP = 6
 
 
 @dataclasses.dataclass
@@ -39,6 +39,7 @@ def rounded_rectangle(
     p4 = (phrase_place.left, phrase_place.top)
 
     # draw fillings
+    print((phrase_place.left, phrase_place.bottom + radius), (phrase_place.right, phrase_place.top - radius), fill_color, -1)
     cv2.rectangle(image, (phrase_place.left, phrase_place.bottom + radius), (phrase_place.right, phrase_place.top - radius), fill_color, -1)
     cv2.rectangle(image, (phrase_place.left - radius, phrase_place.bottom), (phrase_place.right + radius, phrase_place.top), fill_color, -1)
     # draw straight lines
@@ -76,14 +77,14 @@ def needed_height(split_phrase: list[str], width: int, font_scale: float, thickn
         (w, h), _ = cv2.getTextSize(line, fontScale=font_scale, fontFace=FONT, thickness=thickness)
         if w > width:
             words = words[-1:]
-            height += h + LINE_GAP
+            height += h + int(LINE_GAP * font_scale)
 
     if words:
         (_, h), _ = cv2.getTextSize(' '.join(words), fontScale=font_scale, fontFace=FONT, thickness=thickness)
-        height += h + LINE_GAP
+        height += h + int(LINE_GAP * font_scale)
 
     if height > 0:
-        height -= LINE_GAP
+        height -= int(LINE_GAP * font_scale)
 
     return height
 
@@ -92,27 +93,27 @@ def find_place_for_phrase(
     image: np.ndarray, face_position: FacePosition, split_phrase: list[str], thickness: int, corner_min_size=10, delta_on_width=10
 ) -> TextPosition:
     image_height, image_width, _ = image.shape
-    place_at_left = face_position.y - 2 * corner_min_size
-    place_at_right = image_width - face_position.y - face_position.width - 2 * corner_min_size
+    place_at_left = face_position.x - 2 * corner_min_size
+    place_at_right = image_width - face_position.x - face_position.width - 2 * corner_min_size
     maximum_exists_width = max(place_at_right, place_at_left)
-    font_scale = 0.6
+    font_scale = 1
     while True:
         text_height = None
         new_text_width = maximum_exists_width
         while True:
             new_text_height = needed_height(split_phrase, new_text_width, font_scale, thickness)
-            if new_text_height is None or new_text_height > image_height + 2 * corner_min_size or new_text_height > (1. / 2. * new_text_width):
+            if new_text_height is None or new_text_height > image_height - 2 * corner_min_size or (text_height is not None and new_text_height > (2. / 3. * new_text_width)):
                 if text_height is None:
                     break
                 else:
                     top = max(
-                        corner_min_size, min(face_position.x + face_position.height // 2 - text_height // 2, image_height - corner_min_size - text_height)
+                        corner_min_size, min(face_position.y + face_position.height // 2 - text_height // 2, image_height - corner_min_size - text_height)
                     )
                     if place_at_left >= place_at_right:
-                        left = face_position.y - corner_min_size - new_text_width
-                        right = face_position.y - corner_min_size
+                        left = face_position.x - corner_min_size - new_text_width
+                        right = face_position.x - corner_min_size
                     else:
-                        left = face_position.y + face_position.width + corner_min_size
+                        left = face_position.x + face_position.width + corner_min_size
                         right = left + new_text_width
                     return TextPosition(top=top, bottom=top + new_text_height, left=left, right=right, font_scale=font_scale)
 
@@ -151,7 +152,7 @@ def print_text_by_line(image: np.ndarray, split_phrase: list[str], thickness: in
         if w > width:
             line = ' '.join(words[:-1])
             print_line(image, line, text_position.left, current_top, width, text_position.font_scale, thickness)
-            current_top += h + LINE_GAP
+            current_top += h + int(LINE_GAP * text_position.font_scale)
             words = words[-1:]
 
     if words:

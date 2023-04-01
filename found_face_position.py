@@ -29,7 +29,7 @@ def found_face_position(image: np.ndarray) -> Union[FacePosition, None]:
         minSize=(100, 100),
     )
 
-    if not faces:
+    if len(faces) == 0:
         print(f"Face not found")
         return None
     else:

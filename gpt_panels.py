@@ -1,8 +1,9 @@
 import openai
 from typing import List, Dict
 
-def parse_comics(generated_text : str, panels: int) -> List[Dict[str, str]]:
-    generated_text = generated_text.strip().split("\n")
+
+def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
+    generated_text = generated_text.strip().split('\n')
     phrases = [x for x in generated_text if x != '']
     result = []
     for i in range(0, len(phrases), 2):
@@ -10,8 +11,6 @@ def parse_comics(generated_text : str, panels: int) -> List[Dict[str, str]]:
         replica = phrases[i + 1]
         result.append({"panel": panel, "replica": replica})
     return result
-
-
 
 
 def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
@@ -25,9 +24,9 @@ def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
     Person 1(or 2): "What the person is saying"
     ...
     """
-    response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6,
-                                        max_tokens=500)
-    return parse_comics(response.choices[0].text, panels)
-
-
-
+    while True:
+        try:
+            response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6, max_tokens=500)
+            return parse_comics(response.choices[0].text, panels)
+        except Exception:
+            print("Not parsed data from chat gpt. Get next")
