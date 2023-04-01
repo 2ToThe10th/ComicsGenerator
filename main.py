@@ -11,9 +11,12 @@ from found_face_position import found_face_position
 
 def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
     image = get_image_by_situation(panel_situation, style="cyberpunk")
-    print(type(image))
     if phrase is not None:
         face_position = found_face_position(image)
+        while face_position is None:
+            image = get_image_by_situation(panel_situation, style="cyberpunk")
+            face_position = found_face_position(image)
+
         add_prompt_to_picture(image, face_position, phrase)
     return image
 
@@ -37,6 +40,7 @@ def main():
         "A man with messy hair and glasses is seen walking on the street while staring at his old and outdated phone. He looks frustrated and annoyed.",
         "Ugh, this phone is driving me crazy. I need a new one",
     )
+
     cv2.imwrite("out.png", image)
 
 

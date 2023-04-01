@@ -2,18 +2,32 @@ import dataclasses
 
 import numpy as np
 
-
-@dataclasses.dataclass
-class Point:
-    x: int
-    y: int
-
+import cv2
 
 @dataclasses.dataclass
 class FacePosition:
-    top_left: Point
-    bottom_right: Point
+    x: int
+    y: int
+    h: int
+    w: int
 
 
 def found_face_position(image: np.ndarray) -> FacePosition:
-    pass  # TODO(Slava Pirat): find face
+    faceCascade = cv2.CascadeClassifier("face.xml")
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    faces = faceCascade.detectMultiScale(
+        gray_img,
+        scaleFactor=1.05,
+        minNeighbors=16,
+        minSize=(100, 100),
+    )
+
+    if faces == []:
+        return None
+    else:
+        x, y, h, w = faces[0]
+        return FacePosition(x=x, y=y, w=w, h=h)
+    return
+
+
