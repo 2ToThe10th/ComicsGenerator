@@ -6,10 +6,13 @@ import cv2
 
 @dataclasses.dataclass
 class FacePosition:
+    '''
+    (x, y) - top-left face bounding box coordinate
+    '''
     x: int
     y: int
-    h: int
-    w: int
+    height: int
+    width: int
 
 
 def found_face_position(image: np.ndarray) -> FacePosition:
