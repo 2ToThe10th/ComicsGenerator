@@ -99,23 +99,31 @@ def find_place_for_phrase(
     font_scale = 1
     while True:
         text_height = None
-        new_text_width = maximum_exists_width
+        new_text_width = maximum_exists_width + delta_on_width
         while True:
-            new_text_height = needed_height(split_phrase, new_text_width, font_scale, thickness)
-            if new_text_height is None or new_text_height > image_height - 2 * corner_min_size or (text_height is not None and new_text_height > (2. / 3. * new_text_width)):
+            new_text_height = needed_height(split_phrase, new_text_width - delta_on_width, font_scale, thickness)
+            print(font_scale, new_text_height, new_text_width - delta_on_width)
+            if (
+                new_text_height is None
+                or new_text_height > image_height - 2 * corner_min_size
+                or (text_height is not None and new_text_height > (2.0 / 3.0 * (new_text_width - delta_on_width)))
+            ):
                 if text_height is None:
                     break
                 else:
+                    print(text_height)
+                    print(new_text_width)
                     top = max(
                         corner_min_size, min(face_position.y + face_position.height // 2 - text_height // 2, image_height - corner_min_size - text_height)
                     )
                     if place_at_left >= place_at_right:
                         left = face_position.x - corner_min_size - new_text_width
-                        right = face_position.x - corner_min_size
                     else:
                         left = face_position.x + face_position.width + corner_min_size
-                        right = left + new_text_width
-                    return TextPosition(top=top, bottom=top + new_text_height, left=left, right=right, font_scale=font_scale)
+                    right = left + new_text_width
+                    ans = TextPosition(top=top, bottom=top + text_height, left=left, right=right, font_scale=font_scale)
+                    print(ans)
+                    return ans
 
             text_height = new_text_height
             new_text_width -= delta_on_width
@@ -127,7 +135,7 @@ def find_place_for_phrase(
             continue
 
     text_height = needed_height(split_phrase, image_width - 2 * corner_min_size, font_scale, thickness)
-    if text_height < (image_height - face_position.x - face_position.height - corner_min_size):
+    if text_height < (image_height - face_position.y - face_position.height - corner_min_size):
         top = face_position.x + face_position.height + corner_min_size
         return TextPosition(top=top, bottom=top + text_height, left=corner_min_size, right=image_width - corner_min_size, font_scale=font_scale)
     else:
