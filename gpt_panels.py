@@ -1,4 +1,5 @@
 import openai
+import re
 from typing import List, Dict
 
 
@@ -8,8 +9,10 @@ def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
     result = []
     for i in range(0, len(phrases), 2):
         panel = phrases[i]
-        replica = phrases[i + 1]
-        result.append({"panel": panel, "phrase": replica})
+        panel = panel.split(':')[1].strip()
+        phrase = phrases[i + 1]
+        phrase = re.findall(r'"(.*?)"', phrase)[0]
+        result.append({"panel": panel, "phrase": phrase})
     return result
 
 
@@ -31,4 +34,5 @@ def generate_comics(topic: str, panels: int) -> List[Dict[str, str]]:
             print(chatgpt_story)
             return parse_comics(chatgpt_story, panels)
         except Exception:
-            print("Not parsed data from chat gpt. Get next")
+            print(response.choices[0].text)
+            # print("Not parsed data from chat gpt. Get next")
