@@ -1,4 +1,5 @@
 import dataclasses
+from typing import Union
 
 import numpy as np
 
@@ -7,9 +8,9 @@ import cv2
 
 @dataclasses.dataclass
 class FacePosition:
-    '''
+    """
     (x, y) - top-left face bounding box coordinate
-    '''
+    """
 
     x: int
     y: int
@@ -17,7 +18,7 @@ class FacePosition:
     height: int
 
 
-def found_face_position(image: np.ndarray) -> FacePosition:
+def found_face_position(image: np.ndarray) -> Union[FacePosition, None]:
     faceCascade = cv2.CascadeClassifier("face.xml")
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -28,7 +29,7 @@ def found_face_position(image: np.ndarray) -> FacePosition:
         minSize=(100, 100),
     )
 
-    if faces == ():
+    if not faces:
         print(f"Face not found")
         return None
     else:
