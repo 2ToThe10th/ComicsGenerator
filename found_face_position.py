@@ -31,6 +31,7 @@ def found_face_position(image: np.ndarray) -> FacePosition:
         return None
     else:
         x, y, w, h = faces[0]
+        print(faces[0])
         return FacePosition(x=x, y=y, width=w, height=h)
     return
 
