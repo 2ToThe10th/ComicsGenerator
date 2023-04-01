@@ -4,16 +4,17 @@ import numpy as np
 
 import cv2
 
+
 @dataclasses.dataclass
 class FacePosition:
     '''
     (x, y) - top-left face bounding box coordinate
     '''
+
     x: int
     y: int
     width: int
     height: int
-
 
 
 def found_face_position(image: np.ndarray) -> FacePosition:
@@ -28,11 +29,9 @@ def found_face_position(image: np.ndarray) -> FacePosition:
     )
 
     if faces == ():
+        print(f"Face not found")
         return None
     else:
         x, y, w, h = faces[0]
-        print(faces[0])
+        print(f"Found face at {faces[0]}")
         return FacePosition(x=x, y=y, width=w, height=h)
-    return
-
-

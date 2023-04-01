@@ -11,10 +11,13 @@ from found_face_position import found_face_position
 
 def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
     image = get_image_by_situation(panel_situation, style="cyberpunk")
+    print("Got image from ChatGPT")
     if phrase is not None:
         face_position = found_face_position(image)
         while face_position is None:
+            print("Face not found, try again")
             image = get_image_by_situation(panel_situation, style="cyberpunk")
+            print("Got image from ChatGPT")
             face_position = found_face_position(image)
 
         add_prompt_to_picture(image, face_position, phrase)
@@ -22,8 +25,7 @@ def get_next_comics_panel(panel_situation: str, phrase: str) -> np.ndarray:
 
 
 def get_image_by_situation(situation_description: str, style: str) -> np.ndarray:
-    return cv2.imread("img.png")
-    result = openai.Image.create(prompt=f"Make photo in {style} style: {situation_description}", n=1, size="1024x1024")
+    result = openai.Image.create(prompt=f"Make photo in {style} style: {situation_description}", n=1, size="512x512")
     print(result)
     if "error" in result:
         raise ValueError(f"Error happened: {json.dumps(result['error'])}")
