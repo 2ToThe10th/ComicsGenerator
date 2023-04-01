@@ -11,8 +11,9 @@ class FacePosition:
     '''
     x: int
     y: int
-    height: int
     width: int
+    height: int
+
 
 
 def found_face_position(image: np.ndarray) -> FacePosition:
@@ -29,8 +30,8 @@ def found_face_position(image: np.ndarray) -> FacePosition:
     if faces == []:
         return None
     else:
-        x, y, h, w = faces[0]
-        return FacePosition(x=x, y=y, w=w, h=h)
+        x, y, w, h = faces[0]
+        return FacePosition(x=x, y=y, width=w, height=h)
     return
 
 
