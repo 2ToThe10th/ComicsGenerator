@@ -28,6 +28,7 @@ def rounded_rectangle(
     thickness=1,
     line_type=cv2.LINE_AA,
 ):
+    """Add rounded rectangle to image"""
     #  corners:
     #  p1(top_left) - p2
     #  |     |
@@ -65,6 +66,7 @@ def rounded_rectangle(
 
 
 def needed_height(split_phrase: list[str], width: int, font_scale: float, thickness: int) -> Union[int, None]:
+    """Find minimal height that needed to write text with given maximum width"""
     for word in split_phrase:
         if len(word) > width:
             return None
@@ -92,6 +94,7 @@ def needed_height(split_phrase: list[str], width: int, font_scale: float, thickn
 def find_place_for_phrase(
     image: np.ndarray, face_position: FacePosition, split_phrase: list[str], thickness: int, corner_min_size=10, delta_on_width=10
 ) -> TextPosition:
+    """Find best place for prompt with text near face on speaking person"""
     image_height, image_width, _ = image.shape
     place_at_left = face_position.x - 2 * corner_min_size
     place_at_right = image_width - face_position.x - face_position.width - 2 * corner_min_size
@@ -145,11 +148,13 @@ def find_place_for_phrase(
 
 
 def print_line(image: np.ndarray, line: str, left: int, top: int, width: int, font_scale: float, thickness: int):
+    """Add line of text to picture"""
     (w, h), _ = cv2.getTextSize(line, fontScale=font_scale, fontFace=FONT, thickness=thickness)
     cv2.putText(image, line, (left + (width - w) // 2, top + h), FONT, font_scale, (0, 0, 0), thickness, cv2.LINE_AA)
 
 
 def print_text_by_line(image: np.ndarray, split_phrase: list[str], thickness: int, text_position: TextPosition):
+    """Add text to picture line by line"""
     width = text_position.right - text_position.left
     current_top = text_position.top
     words = []
@@ -168,6 +173,7 @@ def print_text_by_line(image: np.ndarray, split_phrase: list[str], thickness: in
 
 
 def add_prompt_to_picture(image: np.ndarray, face_position: FacePosition, phrase: str) -> None:
+    """Add prompt with phrase near to the best place near to face"""
     split_phrase = phrase.split()
     thickness = 1
     phrase_place = find_place_for_phrase(image, face_position, split_phrase, thickness)

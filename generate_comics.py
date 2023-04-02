@@ -13,6 +13,7 @@ from image_concat import concatenate_images
 
 
 def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str) -> np.ndarray:
+    """Generate comics panel by situation and phrase spoked on it"""
     print(f"get_next_comics_panel on situation: \"{panel_situation}\" and phrase: \"{phrase}\"")
     image = get_image_by_situation(panel_situation, style=image_style)
     print("Got image from ChatGPT")
@@ -37,6 +38,7 @@ def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str) -
 
 
 def get_image_by_situation(situation_description: str, style: str) -> np.ndarray:
+    """get image of situation with style from dall e 2"""
     result = openai.Image.create(prompt=f"Create an image in the {style} style: {situation_description}", n=1, size="512x512")
     print(result)
     if "error" in result:
@@ -47,13 +49,15 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
     image_in_array = np.asarray(bytearray(image_request.read()), dtype=np.uint8)
     return cv2.imdecode(image_in_array, -1)  # 'Load it as it is'
 
+
 def add_logo(image):
+    """Add company logo to picture"""
     logo = cv2.imread("./Telekom_Logo_2013.png")
     new_width, new_height = logo.shape[1] // 15, logo.shape[0] // 15
 
     resized = cv2.resize(logo, (new_width, new_height), interpolation=cv2.INTER_AREA)
     new_logo = np.zeros((resized.shape[0] + 10, resized.shape[1] + 10, 3))
-    new_logo[10:,10:] = resized
+    new_logo[10:, 10:] = resized
 
     offset_x = image.shape[1] - new_logo.shape[1] - 10
     offset_y = image.shape[0] - new_logo.shape[0] - 10
@@ -64,8 +68,8 @@ def add_logo(image):
     return image
 
 
-
 def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
+    """Generate comics with width_images x height_images panels"""
     full_images_number = width_images * height_images
     comics = generate_comics_text(comics_topic, full_images_number)
     comics_images = [None] * full_images_number
