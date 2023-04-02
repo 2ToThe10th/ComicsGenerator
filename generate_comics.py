@@ -30,9 +30,9 @@ def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str) -
             face_position = found_face_position(image)
             find_face_try += 1
 
-        cv2.rectangle(
-            image, (face_position.x, face_position.y), (face_position.x + face_position.width, face_position.y + face_position.height), (255, 255, 0), 2
-        )
+        # cv2.rectangle(
+        #     image, (face_position.x, face_position.y), (face_position.x + face_position.width, face_position.y + face_position.height), (255, 255, 0), 2
+        # )
         add_prompt_to_picture(image, face_position, phrase)
     return image
 
