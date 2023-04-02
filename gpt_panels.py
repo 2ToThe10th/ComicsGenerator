@@ -48,7 +48,7 @@ def generate_comics_text(topic: str, panels: int) -> List[Dict[str, str]]:
             print(chatgpt_story)
             return parse_comics(chatgpt_story, panels)
         except Exception as e:
-            if len(response.choices) > 0:
+            if response is not None and len(response.choices) > 0:
                 print(response.choices[0].text)
             print(e)
             print("Not parsed data from chat gpt. Get next")
