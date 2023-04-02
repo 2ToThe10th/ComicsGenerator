@@ -11,7 +11,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/generate_comics/', methods=["GET"])
-def generate_comics():
+def generate_comics_endpoint():
     """Generate comics api endpoint"""
     comics_topic = request.args["comics_topic"]
     image_style = request.args["image_style"]
