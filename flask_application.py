@@ -1,7 +1,7 @@
 import io
 
 import cv2
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, send_file
 from flask_cors import CORS
 
 from main import generate_comics

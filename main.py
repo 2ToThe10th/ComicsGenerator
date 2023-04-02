@@ -1,4 +1,5 @@
 import json
+import threading
 import urllib.request
 
 import cv2
@@ -47,22 +48,24 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
     return cv2.imdecode(image_in_array, -1)  # 'Load it as it is'
 
 
-def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
+async def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
     full_images_number = width_images * height_images
     comics = generate_comics_text(comics_topic, full_images_number)
     comics_images = [None] * full_images_number
+    images_getter_threads = []
     for index, v in enumerate(comics):
         panel = v["panel"]
         phrase = v["phrase"]
-        image = get_next_comics_panel(panel, phrase, image_style)
-        comics_images.append(image)
-        cv2.imwrite(f"out{index}.png", image)
-        print(f"{index} image generated")
-    full_comics = concatenate_images(comics_images, 8, "2:4")
-    cv2.imwrite(f"result.png", full_comics)
 
+        def trampoline(panel, phrase, image_style, index):
+            comics_images[index] = get_next_comics_panel(panel, phrase, image_style)
 
+        images_getter_thread = threading.Thread(target=trampoline, args=(panel, phrase, image_style, index))
+        images_getter_thread.start()
+        images_getter_threads.append(images_getter_thread)
 
+    for thread in images_getter_threads:
+        thread.join()
 
-if __name__ == '__main__':
-    main()
+    full_comics = concatenate_images(comics_images, full_images_number, f"{width_images}:{height_images}")
+    return full_comics
