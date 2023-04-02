@@ -25,7 +25,7 @@ function ClearSituation(setComicsUrl, setLoading) {
 }
 
 function RegenerateComics(dataForRegenerate, setComicsUrl, setLoading) {
-    setComicsUrl("http://127.0.0.1:5000/generate_comics/?" + new URLSearchParams({regenerated: Math.floor(Math.random() * 100000), ...dataForRegenerate}))
+    setComicsUrl("http://18.185.249.159:5000/generate_comics/?" + new URLSearchParams({regenerated: Math.floor(Math.random() * 100000), ...dataForRegenerate}))
     setLoading(true)
 }
 
