@@ -24,7 +24,7 @@ def get_next_comics_panel(panel_situation: str, phrase: str, image_style: str) -
                 face_position = FacePosition(x=30, y=460, width=20, height=20)
                 break
             print("Face not found, try again")
-            image = get_image_by_situation(panel_situation, style="cyberpunk")
+            image = get_image_by_situation(panel_situation, style=image_style)
             print("Got image from ChatGPT")
             face_position = found_face_position(image)
             find_face_try += 1
