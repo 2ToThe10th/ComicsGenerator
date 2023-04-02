@@ -172,7 +172,7 @@ def add_prompt_to_picture(image: np.ndarray, face_position: FacePosition, phrase
     thickness = 1
     phrase_place = find_place_for_phrase(image, face_position, split_phrase, thickness)
 
-    print(f"Found place for phrase: {phrase_place}")
+    print(f"Found place for phrase {phrase}: {phrase_place}")
 
     rounded_rectangle(image, phrase_place, radius=5, thickness=2)
     print_text_by_line(image, split_phrase, thickness, phrase_place)

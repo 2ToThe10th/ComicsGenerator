@@ -55,13 +55,11 @@ def generate_comics(comics_topic: str, image_style: str, width_images: int, heig
     comics_images = [None] * full_images_number
     images_getter_threads = []
     for index, v in enumerate(comics):
-        panel = v["panel"]
-        phrase = v["phrase"]
 
         def trampoline(panel, phrase, image_style, index):
             comics_images[index] = get_next_comics_panel(panel, phrase, image_style)
 
-        images_getter_thread = threading.Thread(target=trampoline, args=(panel, phrase, image_style, index))
+        images_getter_thread = threading.Thread(target=trampoline, args=(v["panel"], v["phrase"], image_style, index))
         images_getter_thread.start()
         images_getter_threads.append(images_getter_thread)
 
