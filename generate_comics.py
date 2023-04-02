@@ -1,4 +1,5 @@
 import json
+import sys
 import threading
 import urllib.request
 
@@ -48,7 +49,7 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
     return cv2.imdecode(image_in_array, -1)  # 'Load it as it is'
 
 
-async def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
+def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
     full_images_number = width_images * height_images
     comics = generate_comics_text(comics_topic, full_images_number)
     comics_images = [None] * full_images_number
@@ -67,5 +68,5 @@ async def generate_comics(comics_topic: str, image_style: str, width_images: int
     for thread in images_getter_threads:
         thread.join()
 
-    full_comics = concatenate_images(comics_images, full_images_number, f"{width_images}:{height_images}")
+    full_comics = concatenate_images(comics_images, width_images, height_images)
     return full_comics

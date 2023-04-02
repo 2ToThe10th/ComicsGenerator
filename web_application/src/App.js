@@ -1,31 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
 import {useState} from "react";
 
-async function GetComics(setComics) {
-    let comics_topic = document.getElementById("comics").value
-    console.log(comics_topic)
-    const comics_data = await (await fetch("http://127.0.0.1:5000/get_comics/?" + new URLSearchParams({comics_topic}))).json()
-    console.log(`Get comics data: ${comics_data}`)
-    setComics(comics_data)
+async function GetComics(setComicsUrl) {
+    const comics_topic = document.getElementById("comics").value
+    const image_style = "cyberpunk"
+    const width_images = 2
+    const height_images = 3
+    setComicsUrl("http://127.0.0.1:5000/generate_comics/?" + new URLSearchParams({comics_topic, image_style, width_images, height_images}))
 }
 
 function App() {
-    const [comics, setComics] = useState([])
+    const [comicsUrl, setComicsUrl] = useState("")
 
     console.log("App")
-    console.log(comics)
+    console.log(comicsUrl)
 
     return (<div className="App">
         <header className="App-header">
-            {comics.length === 0 &&
+            {comicsUrl === "" &&
                 <input type="text" id="comics" name="comics"/>
             }
-            {comics.length === 0 &&
-                <input type="Submit" name="Get Comics" onClick={() => GetComics(setComics)}/>
+            {comicsUrl === "" &&
+                <input type="Submit" name="Get Comics" onClick={() => GetComics(setComicsUrl)}/>
             }
-            {comics.length === 6 && <Comics comics={comics}/>}
-            {comics.length !== 0 && comics.length !== 6 && <h1>Incorrect panels length</h1>}
+            {comicsUrl !== "" && <img src={comicsUrl} alt="comics"/>}
         </header>
     </div>);
 }
