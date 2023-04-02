@@ -4,6 +4,9 @@ from typing import List, Dict
 
 
 def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
+    """
+    Parsing the output of the GPT3 generated text
+    """
     generated_text = generated_text.replace('\n', ' ').strip()
     generated_text = re.split(r"Panel|Person", generated_text)
     generated_text = [x for x in generated_text if x != '']
@@ -26,6 +29,7 @@ def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
 
 
 def generate_comics_text(topic: str, panels: int) -> List[Dict[str, str]]:
+    """Generating the description and phrases for each panel"""
     requested_text = f"""
     Create me a comics about {topic} .The comics consists of {panels} panels.
     Each panel consists of exactly one replica. The dialogue is between 2 people
@@ -44,8 +48,6 @@ def generate_comics_text(topic: str, panels: int) -> List[Dict[str, str]]:
             print(chatgpt_story)
             return parse_comics(chatgpt_story, panels)
         except Exception as e:
-
             print(response.choices[0].text)
             print(e)
-            print('HUINUA HUINUA HUINUA HUINUA HUINUA')
-            # print("Not parsed data from chat gpt. Get next")
+            print("Not parsed data from chat gpt. Get next")

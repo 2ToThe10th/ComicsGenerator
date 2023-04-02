@@ -7,12 +7,7 @@ PADDING = 20
 
 
 def concatenate_images(images: List[np.ndarray], horizontal_num: int, vertical_num: int) -> np.ndarray:
-    """
-    :param images: list of images
-    :param number_of_images: number of images
-    :param resulting_scale: string of type "int:int" corresponds to the number of images vertically and horizontally
-    :return:
-    """
+    """Creating a comics from the given list of images"""
     number_of_images = horizontal_num * vertical_num
     assert len(images) == number_of_images
 

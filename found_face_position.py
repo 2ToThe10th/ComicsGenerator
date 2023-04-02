@@ -19,6 +19,7 @@ class FacePosition:
 
 
 def found_face_position(image: np.ndarray) -> Union[FacePosition, None]:
+    """Generating the bounding box of the detected face in the image"""
     faceCascade = cv2.CascadeClassifier("face.xml")
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
