@@ -1,0 +1,22 @@
+.App {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+img {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.spinner-border {
+    animation-duration: 3s;
+    height: 100px;
+    width: 100px;
+}
+
+.btn {
+    width: 100%;
+}
