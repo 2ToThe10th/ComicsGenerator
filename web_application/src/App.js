@@ -4,13 +4,14 @@ import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+URL = "http://18.185.249.159:5000/generate_comics/?"
 
 function GetComics(setComicsUrl, setLoading, setDataForRegenerate) {
     const comics_topic = document.getElementById("formComicsTopic").value
     const image_style = document.getElementById("formImageStyle").value || "cyberpunk"
     const width_images = document.getElementById("formWidthImages").value || "2"
     const height_images = document.getElementById("formHeightImages").value || "3"
-    setComicsUrl("http://127.0.0.1:5000/generate_comics/?" + new URLSearchParams({comics_topic, image_style, width_images, height_images}))
+    setComicsUrl(URL + new URLSearchParams({comics_topic, image_style, width_images, height_images}))
     setDataForRegenerate({comics_topic, image_style, width_images, height_images})
     setLoading(true)
 }
@@ -25,7 +26,7 @@ function ClearSituation(setComicsUrl, setLoading) {
 }
 
 function RegenerateComics(dataForRegenerate, setComicsUrl, setLoading) {
-    setComicsUrl("http://18.185.249.159:5000/generate_comics/?" + new URLSearchParams({regenerated: Math.floor(Math.random() * 100000), ...dataForRegenerate}))
+    setComicsUrl(URL + new URLSearchParams({regenerated: Math.floor(Math.random() * 100000), ...dataForRegenerate}))
     setLoading(true)
 }
 
@@ -83,24 +84,6 @@ function App() {
             </div>
         }
     </div>);
-}
-
-function Comics(props) {
-    const comics = props.comics
-    const panels = comics.map((x, _) => <Panel panel={x.panel} phrase={x.phrase}/>)
-    return <div style={{display: "flex", flexDirection: "column"}}>
-        {[...Array(3)].map((_, i) => <div
-            style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>{panels[2 * i]}{panels[2 * i + 1]}</div>)}
-    </div>
-}
-
-function Panel(props) {
-    const panel = props.panel
-    const phrase = props.phrase
-
-    return (
-        <img src={`http://127.0.0.1:5000/get_panel/?` + new URLSearchParams({panel, phrase})} alt={phrase} height={128} width={128}/>
-    )
 }
 
 export default App;
