@@ -16,7 +16,7 @@ def parse_comics(generated_text: str, panels: int) -> List[Dict[str, str]]:
         if panel[0] == '\'' or panel[0] == '\"':
             panel = panel[1:-1]
 
-        phrase = generated_text[i].split(':')[1].strip()
+        phrase = generated_text[i + 1].split(':')[1].strip()
         if phrase[0] == '\'' or phrase[0] == '\"':
             phrase = phrase[1:-1]
 
