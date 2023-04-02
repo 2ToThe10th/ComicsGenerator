@@ -48,6 +48,23 @@ def get_image_by_situation(situation_description: str, style: str) -> np.ndarray
     image_in_array = np.asarray(bytearray(image_request.read()), dtype=np.uint8)
     return cv2.imdecode(image_in_array, -1)  # 'Load it as it is'
 
+def add_logo(image):
+    logo = cv2.imread("./Telekom_Logo_2013.png")
+    new_width, new_height = logo.shape[1] // 15, logo.shape[0] // 15
+
+    resized = cv2.resize(logo, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    new_logo = np.zeros((resized.shape[0] + 10, resized.shape[1] + 10, 3))
+    new_logo[10:,10:] = resized
+
+    offset_x = image.shape[1] - new_logo.shape[1] - 10
+    offset_y = image.shape[0] - new_logo.shape[0] - 10
+    x_end = offset_x + new_logo.shape[1]
+    y_end = offset_y + new_logo.shape[0]
+    image[offset_y:y_end, offset_x:x_end] = new_logo
+
+    return image
+
+
 
 def generate_comics(comics_topic: str, image_style: str, width_images: int, height_images: int):
     full_images_number = width_images * height_images
@@ -67,4 +84,5 @@ def generate_comics(comics_topic: str, image_style: str, width_images: int, heig
         thread.join()
 
     full_comics = concatenate_images(comics_images, width_images, height_images)
+    full_comics = add_logo(full_comics)
     return full_comics
