@@ -39,7 +39,7 @@ def generate_comics_text(topic: str, panels: int) -> List[Dict[str, str]]:
     response = None
     while True:
         try:
-            response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6, max_tokens=4097)
+            response = openai.Completion.create(engine="text-davinci-003", prompt=requested_text, temperature=0.6, max_tokens=4097 - len(requested_text))
             chatgpt_story = response.choices[0].text
             print(chatgpt_story)
             return parse_comics(chatgpt_story, panels)
